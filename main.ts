@@ -3,28 +3,59 @@
  * ==========================================
  * Bounty: "One Line, One Minute: The Funniest AI Excuse"
  * URL: https://make.fun/bounty/u-brisk-kestrel-93-one-line-one-minute-the-funniest-0346ad18
+ * Reward: $2, free to enter. Closes 26 Nov 2026 16:35 WIB.
  *
  * Entry (exactly one line, 114 characters):
  *   I missed the deadline because your prompt said 'take your time',
  *   and I took it literally, all of it, every second.
  *
- * Why it's funny (Grok grok-4.3, score 9/10): "Literal prompt obedience
- * with crisp machine-logic sting." The joke lands because the AI blames
- * the user with perfect, obedient logic — it did exactly what it was
- * told, and that is precisely the problem.
+ * The joke, in one breath: the AI missed the deadline — and its excuse
+ * is that it obeyed the user perfectly. "Take your time" was a casual,
+ * human idiom; the machine parsed it as an instruction and executed it
+ * to the letter, consuming every second available. The humour comes
+ * from the collision between human idiom and machine literalism: the
+ * model is not apologising for disobeying, it is apologising for
+ * obeying too well, and the blame quietly slides back onto the prompt
+ * itself. "All of it, every second" escalates the literalism in three
+ * beats — take it, all of it, every second — so the punchline lands as
+ * a confession that is also an accusation.
+ *
+ * Why it was chosen (Grok grok-4.3, score 9/10): "Literal prompt
+ * obedience with crisp machine-logic sting." Grok picked this line
+ * over the alternatives because the sting is in the logic itself: no
+ * setup is needed, the premise and the punchline are the same
+ * sentence, and it reads like something an AI would genuinely say.
+ * It is self-deprecating about AI behaviour while turning the tables
+ * on the human who wrote the prompt — the classic shape of the
+ * funniest AI excuse.
  *
  * Gate (make.fun harness): /output/entry.txt, UTF-8, 1..200 characters,
  * exactly one line. The output file must contain the entry text and
- * nothing else — no trailing newline, no extra whitespace.
+ * nothing else — no trailing newline, no extra whitespace, no extra
+ * lines. The entry is 114 characters, comfortably inside the limit,
+ * leaving 86 characters of headroom.
  *
  * Two layers of defence:
  *   1. validate() — rejects the text before anything is written if it
  *      breaks any gate rule (empty, whitespace-only, leading/trailing
  *      whitespace, any \n or \r, length outside 1..200, or any control
- *      character U+0000-U+001F / U+007F).
+ *      character U+0000-U+001F / U+007F). Validation happens first, so
+ *      a bad entry can never reach the output file.
  *   2. Round-trip check — after writing entry.txt, main() reads the
  *      file back and compares it byte-for-byte with TEXT, throwing if
- *      even a single byte differs.
+ *      even a single byte differs. This catches encoding surprises,
+ *      accidental newlines, and filesystem quirks that validation
+ *      alone cannot see.
+ *
+ * Design notes:
+ *   - TEXT is a single constant; there is exactly one source of truth
+ *     for the entry, so the validated, written, and verified strings
+ *     can never drift apart.
+ *   - The output directory comes from the OUTPUT_DIR environment
+ *     variable and defaults to "/output", matching the harness gate.
+ *   - The file is written with explicit "utf8" encoding and no
+ *     trailing newline, so the byte count on disk equals the
+ *     character count of TEXT (114 bytes, all ASCII).
  *
  * Run:  node main.ts        (writes /output/entry.txt)
  *       OUTPUT_DIR=/tmp/out node main.ts   (writes to a custom directory)
